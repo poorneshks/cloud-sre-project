@@ -3,7 +3,7 @@ name: Build and Deploy to Azure Container Apps
 on:
   push:
     branches:
-      - main  # You can change this to your default branch if different
+      - main  # Triggers on push to main branch
 
 jobs:
   build-and-deploy:
@@ -23,6 +23,6 @@ jobs:
         with:
           resourceGroup: sre-rg
           containerAppName: sreapp
-          imageToBuild: mydockerhubuser/sreapp:latest  # No Docker Hub needed; built internally
+          imageToBuild: sreapp:latest
           dockerfilePath: ./app/Dockerfile
-          sourceDirectory: ./app
+          appSourcePath: ./app  # ✅ correct key name
