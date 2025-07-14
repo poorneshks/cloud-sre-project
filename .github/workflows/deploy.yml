@@ -3,7 +3,11 @@ name: Build and Deploy to Azure Container Apps
 on:
   push:
     branches:
-      - main  # Triggers on push to main branch
+      - main
+
+env:
+  ACR_NAME: cabccf634d35acr  # use your actual ACR name (without .azurecr.io)
+  IMAGE_NAME: sreapp:latest
 
 jobs:
   build-and-deploy:
@@ -13,16 +17,26 @@ jobs:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
 
-      - name: 🔐 Log in to Azure using Service Principal
+      - name: 🔐 Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.new_sre_secret }}
 
-      - name: 🐳 Build and deploy to Azure Container Apps
+      - name: 🔐 Log in to ACR
+        run: |
+          az acr login --name $ACR_NAME
+
+      - name: 🐳 Build Docker image
+        run: |
+          docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME ./app
+
+      - name: 📤 Push image to ACR
+        run: |
+          docker push $ACR_NAME.azurecr.io/$IMAGE_NAME
+
+      - name: 🚀 Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
           resourceGroup: sre-rg
           containerAppName: sreapp
-          imageToBuild: sreapp:latest
-          dockerfilePath: ./app/Dockerfile
-          appSourcePath: ./app  # ✅ correct key name
+          imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
