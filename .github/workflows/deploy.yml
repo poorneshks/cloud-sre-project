@@ -18,8 +18,7 @@ jobs:
         with:
           creds: ${{ secrets.new_sre_secret }}
 
-      - name: 🛠️ Build phase complete - Deployment step skipped
+      - name: 🛠️ Build phase complete - Deployment skipped
         run: |
           echo "✅ Build and login steps succeeded."
-          echo "⚠️ Deployment to Azure Container Apps was skipped due to ACR pull permission issues on Free Tier."
-          echo "📌 All other CI/CD steps completed as expected."
+          echo "⚠️ Deployment to Azure Container Apps was skipped due to ACR permission issues on Free Tier."
