@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "👋 Hello from Flask SRE App!"
+    return "👋 Hello from Flask SRE App v2!"
 
 if __name__ == "__main__":
     # Use Flask's built-in development server when running locally
